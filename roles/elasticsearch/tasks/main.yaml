@@ -1,0 +1,65 @@
+
+- name: Install elasticsearch-6.x from repository
+  copy:
+    src: elasticsearch.repo
+    dest: /etc/yum.repos.d/
+    owner: root
+    group: root
+    mode: 0644
+  tags: elasticsearch
+
+  #- name: Refresh repository
+  #command: yum makecache fast
+  #tags: elasticsearch
+
+- name: Install Elasticsearch  
+  yum:
+    name: elasticsearch
+    state: present
+  tags: elasticsearch
+
+- name: Enable automatic creation of X-Pack indicies
+  lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    regexp: '^action.destructive '
+    insertafter: '^#action.destructive '
+    line: 'action.auto_create_index: .security,.monitoring*,.watches,.triggered_watches,.watcher-history*,.ml*'
+    owner: root
+    group: elasticsearch
+    mode: 0660
+  tags: elasticsearch
+
+- name: Reload systemd
+  systemd: daemon_reload=yes
+  tags: elasticsearch
+
+- name: Enable elasticsearch at boot and start
+  systemd:
+    name: elasticsearch.service
+    state: started
+    enabled: True
+  tags: elasticsearch
+
+- name: Adding port 9200/tcp for elasticsearch
+  firewalld:
+    port: 9200/tcp
+    permanent: true
+    immediate: true
+    state: enabled
+  tags: elasticsearch
+
+- name: Adding port 9300/tcp for elasticsearch
+  firewalld:
+    port: 9300/tcp
+    permanent: true
+    immediate: true
+    state: enabled
+  tags: elasticsearch
+
+
+
+
+
+
+
+

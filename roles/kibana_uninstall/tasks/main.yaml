@@ -1,0 +1,40 @@
+
+- name: Disable Kibana at boot and stopped service
+  systemd:
+    name: kibana.service
+    state: stopped
+    enabled: false
+    daemon_reload: yes
+  ignore_errors: True
+  tags: kibana
+
+
+
+- name: Remove Kibana service into systemd and reloading daemon
+  file: 
+    path: /etc/systemd/system/kibana.service
+    state: absent
+  tags: kibana
+
+- name: Remove Kibana
+  yum:
+    name: kibana
+    state: absent
+  tags: kibana
+
+
+- name: Remove kibana-6.x repository
+  file: 
+    path: /etc/yum.repos.d/kibana.repo 
+    state: absent
+  tags: kibana
+
+
+- name: Removing port 5601/tcp for kibana
+  firewalld:
+    port: 5601/tcp
+    permanent: true
+    immediate: true
+    state: disabled
+  tags: kibana
+

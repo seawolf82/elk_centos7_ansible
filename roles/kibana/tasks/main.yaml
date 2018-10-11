@@ -1,0 +1,47 @@
+
+- name: Install kibana-6.x from repository
+  copy:
+    src: kibana.repo
+    dest: /etc/yum.repos.d/
+    owner: root
+    group: root
+    mode: 0644
+  tags: kibana
+
+  #- name: Refresh repository
+  #command: yum makecache fast
+  #tags: kibana
+
+- name: Install Kibana
+  yum:
+    name: kibana
+    state: present
+  tags: kibana
+
+- name: Reload systemd
+  systemd: daemon_reload=yes
+  tags: kibana
+
+- name: Enable Kibana at boot and start
+  systemd:
+    name: kibana.service
+    state: started
+    enabled: True
+  tags: kibana
+
+- name: Adding port 5601/tcp for kibana
+  firewalld:
+    port: 5601/tcp
+    permanent: true
+    immediate: true
+    state: enabled
+  tags: kibana
+
+
+
+
+
+
+
+
+

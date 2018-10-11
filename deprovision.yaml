@@ -1,0 +1,9 @@
+- name: Terminate running ELK and remove all files
+  hosts: elk-servers
+  remote_user: root
+  roles:
+    - elasticsearch_uninstall
+    - logstash_uninstall
+    - kibana_uninstall
+    - java-oracle-jdk_uninstall
+

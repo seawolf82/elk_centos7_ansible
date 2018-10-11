@@ -1,0 +1,14 @@
+
+- hosts: all
+  remote_user: root
+  roles:
+    - common
+
+- hosts: elk-servers
+  remote_user: root
+  roles:
+    - java-oracle-jdk
+    - elasticsearch
+    - logstash
+    - kibana
+

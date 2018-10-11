@@ -1,0 +1,37 @@
+---
+
+- name: copying jdk file into /tmp 
+  copy:
+    src: files/{{ oracle_java_rpm_filename }}
+    dest: /tmp/{{ oracle_java_rpm_filename }}
+    owner: root
+    group: root
+    mode: 0700
+  tags: java
+
+- name: install Java JDK rpm from a local file
+  yum:
+    name: /tmp/{{ oracle_java_rpm_filename }}
+    state: present
+  tags: java
+
+- name: remove Java JDK rpm from a local directory
+  file: 
+    path: /tmp/{{ oracle_java_rpm_filename }}
+    state: absent
+  tags: java
+
+
+- name: Setting JAVA HOME
+  template:
+    src: java.sh.j2
+    dest: /etc/profile.d/java.sh
+    mode: 0644
+  tags: java
+
+- name: Executing java.sh
+  shell: source /etc/profile.d/java.sh
+  args:
+     executable: /bin/bash
+  tags: java
+

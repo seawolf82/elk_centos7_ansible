@@ -1,0 +1,46 @@
+
+- name: Install logstash-6.x from repository
+  copy:
+    src: logstash.repo
+    dest: /etc/yum.repos.d/
+    owner: root
+    group: root
+    mode: 0644
+  tags: logstash
+
+  #- name: Refresh repository
+  #command: yum makecache fast
+  #tags: logstash
+
+- name: Install Logstash
+  yum:
+    name: logstash
+    state: present
+  tags: logstash
+
+- name: Install filebeat
+  yum:
+    name: filebeat
+    state: present
+  tags: logstash
+
+- name: Reload systemd
+  systemd: daemon_reload=yes
+  tags: logstash
+
+- name: Enable Logstash at boot and start
+  systemd:
+    name: logstash.service
+    state: started
+    enabled: True
+  tags: logstash
+
+
+
+
+
+
+
+
+
+

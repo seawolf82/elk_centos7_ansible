@@ -1,0 +1,15 @@
+---
+
+
+- name: Remove Java JDK from system
+  yum:
+    name: "{{ oracle_jdk_package_installed }}"
+    state: absent
+  tags: java
+
+- name: Clean java.sh
+  file: 
+    state: absent
+    path: /etc/profile.d/java.sh
+  tags: java
+

@@ -1,0 +1,54 @@
+
+- name: Disable elasticsearch at boot and stopped service
+  systemd:
+    name: elasticsearch.service
+    state: stopped
+    enabled: false
+    daemon_reload: yes
+  ignore_errors: True  
+  tags: elasticsearch
+
+
+
+- name: Remove Elasticsearch service into systemd and reloading daemon
+  file: 
+    path: /usr/lib/systemd/system/elasticsearch.service 
+    state: absent
+  tags: elasticsearch
+
+- name: Remove Elasticsearch
+  yum:
+    name: elasticsearch
+    state: absent
+  tags: elasticsearch
+
+
+- name: Remove elasticsearch-6.x repository
+  file: 
+    path: /etc/yum.repos.d/elasticsearch.repo 
+    state: absent
+  tags: elasticsearch
+
+- name: Removing port 9200/tcp for elasticsearch
+  firewalld:
+    port: 9200/tcp
+    permanent: true
+    immediate: true
+    state: disabled
+  tags: elasticsearch
+
+- name: Removing port 9300/tcp for elasticsearch
+  firewalld:
+    port: 9300/tcp
+    permanent: true
+    immediate: true
+    state: disabled
+  tags: elasticsearch
+
+
+
+
+
+
+
+
