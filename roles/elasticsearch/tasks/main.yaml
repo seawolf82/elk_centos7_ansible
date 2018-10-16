@@ -29,6 +29,7 @@
     mode: 0660
   tags: elasticsearch
 
+
 - name: Reload systemd
   systemd: daemon_reload=yes
   tags: elasticsearch
